@@ -1,28 +1,38 @@
 import React from "react";
 
-const PasswordStrength = ({ password }) => {
-  // const passwordStrength = (password) => {
-  //   if (password.length === 0 || password.length <= 2) {
-  //     return "Weak Password";
-  //   } else if (password.length <= 4) {
-  //     return "Moderate Password";
-  //   } else {
-  //     return "Strong Password";
-  //   }
-  // };
+const passwordStrength = (password) => {
+  let strength = 0;
 
-  // const { label } = passwordStrength(password);
+  if (/[A-Z]/.test(password)) strength++;
+  if (/[a-z]/.test(password)) strength++;
+  if (/[0-9]/.test(password)) strength++;
+  if (/[#$&*_@]/.test(password)) strength++;
+  if (password.length >= 8) strength++;
+
+  return strength;
+};
+
+const PasswordStrength = ({ password }) => {
+  const strength = passwordStrength(password);
+
+  let label, color;
+
+  if (strength <= 2) {
+    label = "Weak Password";
+    color = "red";
+  } else if (strength <= 4) {
+    label = "Moderate Password";
+    color = "orange";
+  } else if (strength === 5) {
+    label = "Strong Password";
+    color = "green";
+  }
 
   return (
     <div
       className="px-5 py-5"
       style={{
-        backgroundColor:
-          password.length <= 2
-            ? "red"
-            : password.length <= 4
-            ? "orange"
-            : "green",
+        backgroundColor: color,
       }}
       data-testid="passwordStrengthDiv"
     >
@@ -32,11 +42,7 @@ const PasswordStrength = ({ password }) => {
           textAlign: "center",
         }}
       >
-        {password.length === 0 || password.length <= 2
-          ? "Weak Password"
-          : password.length <= 4
-          ? "Moderate Password"
-          : "Strong Password"}
+        {label}
       </h4>
     </div>
   );
